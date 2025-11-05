@@ -1,1 +1,5 @@
 .venv
+glove.6b
+glove.6b.zip
+subject_8.mat
+subject_8_clean.npy
