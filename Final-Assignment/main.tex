@@ -1,0 +1,167 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{float}
+
+\geometry{margin=0.7in}
+\onehalfspacing
+
+\title{A Drift Diffusion Model Analysis}
+\author{Koorosh Komeili Zadeh (s3893995)}
+\date{December 2025}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We can be influenced by information without noticing. In this project, we tested whether a very brief prime, masked with noise, can change the accuracy and speed of decisions about pictures of cats and dogs. The goal was to study which part of the decision process is affected by this subliminal priming using the drift diffusion model (DDM). A separate DDM was fitted for each participant in the WOOF and MEOW prime conditions. The results showed small changes in drift rate, boundary separation, and non-decision time. The strongest effect was a change in boundary separation, suggesting that masked primes influence caution or preparation rather than the quality of sensory evidence. These findings help show how unconscious signals can shift early decision settings even when behavior alone appears weak.
+\end{abstract}
+
+\section{Introduction}
+Humans often make fast decisions based on noisy information, and these decisions can be changed by signals that we do not consciously notice. This effect is known as priming. In our experiment, participants saw a picture of a cat or a dog and had to categorize it. Before the picture, a prime was shown for a very short time and then masked with noise. The prime could be the word ``WOOF'' or ``MEOW''. Because the prime was masked, participants were not aware of it. Related words can speed up responses \citep{meyer1971facilitation}, and this can even happen when the prime is unconscious \citep{marcel1983conscious}.
+
+The drift diffusion model (DDM) explains accuracy and reaction times by splitting a decision into different parts. Drift rate shows how good the evidence is, and boundary separation shows how cautious a person is. Non-decision time reflects perceptual and motor delays. Earlier work suggests that priming often affects boundary or non-decision time more than drift \citep{voss2013diffusion}. Because some DDM variants are not fully identifiable \citep{vanmaanen2021interpretation}, we focused on the main question: which part of the decision process changes when people receive a masked prime?
+
+\newpage
+
+\section{Experiment and Data}
+The dataset contained twelve participants. Each participant completed many trials. The sequence on each trial was the same: a masked prime (WOOF or MEOW) shown for a very short time, followed by a noise mask, and then a picture of a cat or a dog. The task was to report as fast and accurately as possible whether the picture showed a cat or a dog.
+
+Because the prime was masked, participants could not consciously see it. Reaction times (RT) and accuracy (correct/incorrect) were recorded. Trials with RT below 0.15 seconds were removed because these responses were too fast to reflect a real decision. Each trial was labeled by prime condition (WOOF or MEOW). We also labeled congruent and incongruent trials to check for simple behavioral effects, but this label was not used for model fitting.
+
+The design was fully within-subject. Every participant saw both prime types and both stimulus categories. This allowed us to study how the same person changed their decision process across conditions.
+
+\section{Methods}
+
+\subsection*{Data preparation}
+For each participant, trials were cleaned and split into the two prime conditions. Accuracy and RT distributions were visualized to ensure that data selection was correct and that the conditions had a similar number of trials. This also helped confirm that the dataset did not contain selection errors.
+
+\subsection*{DDM structure}
+A drift diffusion model was fitted for each participant and each prime condition. The noise parameter was fixed to 1 to avoid the scaling problem of DDMs. This is standard practice when models are not identifiable otherwise. The model contained:
+
+\textbf{Drift rate} shows how fast evidence moves toward a decision.
+
+\textbf{Boundary separation} shows how cautious the decision is.
+
+\textbf{Non-decision time} includes visual encoding and motor time.
+
+These three parameters give a simple but useful description of how decisions unfold over time.
+
+\subsection*{Fitting strategy}
+People differ strongly in their decision processes, so fitting one model to all participants would be wrong \citep{voss2013diffusion}. Therefore, we fitted a separate DDM for each participant in each condition. Each model used all correct and incorrect RTs to estimate parameters. This approach respects individual variability and avoids unrealistic group pooling.
+
+\subsection*{Model comparison}
+To test which parameter was most affected by the prime, we fitted three additional restricted models: one where only drift varies between conditions, one where only boundary varies, and one where only non-decision time varies.
+
+We used the Bayesian Information Criterion (BIC) for comparison. The model with the lowest BIC per participant was considered the best explanation for the condition effect. This method allowed us to see which part of the decision process changed most consistently across people.
+
+\section{Results}
+
+\subsection*{Behavioral results}
+Figure~1 shows accuracy and RT for congruent and incongruent trials. Congruent trials were faster but also less accurate, suggesting a small speed--accuracy tradeoff.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{FIG_behavior_congruency.png}
+\caption{Behavior results showing accuracy and RT differences for congruent and incongruent trials. Congruent trials were faster but less accurate.}
+\end{figure}
+
+\subsection*{Participant-level behavior}
+Participants showed clear individual differences in mean accuracy and RT for each prime condition. No strong group-level pattern appeared, which supports fitting models per participant.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{FIG_behavior_by_participant.png}
+\caption{Mean accuracy and reaction time for each participant in the WOOF and MEOW conditions.}
+\end{figure}
+
+\subsection*{Exploratory stimulus--prime interaction}
+We also explored the interaction of prime and stimulus type (cat or dog). Differences were small and inconsistent (Figure~3), so we did not include stimulus category in the DDM.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{FIG_stimulus_prime_interaction.png}
+\caption{Stimulus--prime interaction. Differences were weak, so the stimulus category was not used in the model.}
+\end{figure}
+
+\subsection*{DDM intuition: trajectories and predictions}
+Example trajectories and predicted RT distributions are shown in Figure~4.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{FIG_example_trajectories_and_distributions.png}
+\caption{Example decision variable paths and predicted RT distributions.}
+\label{fig:traj}
+\end{figure}
+
+\subsection*{DDM parameter estimates}
+Figure~5 shows drift, boundary, and non-decision time estimates for each prime condition. Means were close but not equal.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{FIG_ddm_parameters.png}
+\caption{Drift, boundary, and non-decision time for each condition.}
+\end{figure}
+
+Paired tests and effect sizes suggested a small drift difference and a small boundary difference, with a medium effect for non-decision time.
+
+\subsection*{Parameter differences and effect sizes}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{FIG_parameter_differences_effect_sizes.png}
+\caption{Parameter differences and effect sizes. Non-decision time shows the largest effect.}
+\end{figure}
+
+\subsection*{Model comparison}
+The BIC analysis (Figure~7) showed that the boundary-varying model is best for 8 participants. The drift-varying model is best for 4 participants. Non-decision time rarely produced the best fit.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{FIG_bic_model_comparison.png}
+\caption{BIC comparison across models. Boundary changes best explained the data.}
+\end{figure}
+
+\subsection*{Model fit quality}
+Model fit was checked using CDF plots, Q--Q plots, and median RT residuals. These showed good agreement between the model and the data.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{FIG_cdf_and_qq.png}
+\caption{CDF and Q--Q plots for the two prime conditions.}
+\end{figure}
+
+\noindent
+These plots show how well the model matches the data. For both WOOF and MEOW, the model closely follows the empirical CDF for correct and error trials. The Q--Q plots also line up with the diagonal, meaning the predicted RT quantiles match the observed ones. This suggests that the fitted DDM captures the main structure of the reaction time distributions.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{FIG_model_residuals.png}
+\caption{Median RT residuals for each participant. Errors were small.}
+\end{figure}
+
+\noindent
+Residuals were small for nearly all participants, and there was no consistent bias toward under- or over-predicting reaction times. This further shows that the model provides a reasonable fit to the data across both conditions.
+
+\section{Discussion}
+The goal was to test whether masked primes change the decision process. Behavior showed a small speed--accuracy tradeoff on congruent trials. The DDM results showed very small drift changes but clearer effects on boundary and non-decision time. This supports earlier work suggesting that unconscious primes do not strongly affect the quality of sensory evidence \citep{dehaene1998masking}, but can shift caution or early perceptual timing.
+
+Model comparison showed that boundary separation was the best explanation for most participants. This suggests that masked primes may change how cautious or ready the participant is before the decision even starts. Instead of changing what evidence they see, the prime may change how fast they commit to a choice. This fits with the idea that unconscious signals can tune early decision settings without changing the information itself.
+
+\subsection*{Limitations}
+One limitation is that DDM parameters can sometimes be difficult to interpret because different parameter combinations can look similar. Also, the experiment had only two conditions and no awareness check for primes, so we cannot be sure how well the masking worked for each participant. More trials would also help stabilize the fits and reduce noise in the parameter estimates.
+
+\subsection*{Future work}
+Future studies could include both masked and unmasked primes to compare conscious and unconscious priming directly. Another improvement would be to use hierarchical DDMs to obtain more stable group-level estimates while still respecting individual differences. It may also be useful to add starting-point bias to the model, because some primes might push the starting point toward one decision boundary. Finally, varying the difficulty of the stimuli could show whether priming interacts with how much evidence people can gather from the picture.
+
+\section{Conclusion}
+Masked primes led to small but meaningful changes in decision-making. They did not strongly change evidence accumulation, but changed caution and timing. The DDM captured these subtle effects and explained both accuracy and RT patterns well. The boundary parameter emerged as the most consistent explanation across participants, suggesting that unconscious information may shift how prepared people are to respond, even when they do not notice the signal. These results also highlight the value of cognitive models: the behavioral effects alone were weak, but the DDM showed how the hidden processes changed. Future work with more conditions and awareness checks can deepen our understanding of how unconscious information enters the decision system.
+
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}
